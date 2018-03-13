@@ -25,7 +25,13 @@ def get_pdf_links(root_url):
 	if not root_url.endswith("/"):     
 		index = root_url.rfind("/")
 		root_url = root_url[:index+1]
-	pdf_links = [root_url + link['href'] for link in temp if link['href'].endswith('pdf')]	
+	pdf_links = []
+	for link in temp:
+		if link['href'].endswith('pdf'):  
+			if link['href'].startswith('http'):			
+				pdf_links.append(link['href'])
+			else:
+				pdf_links.append(root_url + link['href'] )	
 	
 	return pdf_links
 
@@ -53,8 +59,7 @@ def run(root_url):
 				data = future.result()
 			except Exception as exc:
 				print('{} generated an exception: {}'.format(url, exc))
-			else:
-				print('{} page is {} bytes'.format(url, len(data)))
+
 
 	print('All {} pdf files downloaded!'.format(file_num))
 
